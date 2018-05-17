@@ -4,7 +4,7 @@ using UnityEngine;
 using UnityEngine.Rendering;
 [RequireComponent(typeof(Camera))]
 public class SubsurfaceProfile : MonoBehaviour {
-    [Range(0f, 100f)]
+    [Range(0f, 20f)]
 	public float SSSScaler = 1;
     public Color SSSColor;
     public Color SSSFalloff;
@@ -44,8 +44,10 @@ public class SubsurfaceProfile : MonoBehaviour {
         effect.SetVectorArray(kernel, KernelArray);
         buffer.Clear();
         buffer.GetTemporaryRT(tempTex, cam.pixelWidth, cam.pixelHeight, 0, FilterMode.Trilinear, RenderTextureFormat.DefaultHDR);
-        buffer.Blit(BuiltinRenderTextureType.CameraTarget, tempTex, effect);
-        buffer.Blit(tempTex, BuiltinRenderTextureType.CameraTarget, effect);
+        buffer.Blit(BuiltinRenderTextureType.CameraTarget, tempTex, effect, 0);
+        buffer.Blit(tempTex, BuiltinRenderTextureType.CameraTarget, effect, 1);
+        buffer.Blit(BuiltinRenderTextureType.CameraTarget, tempTex, effect, 0);
+        buffer.Blit(tempTex, BuiltinRenderTextureType.CameraTarget, effect, 1);
     }
 
     public Material effect;

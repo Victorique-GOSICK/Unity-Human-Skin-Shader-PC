@@ -52,7 +52,7 @@ CGINCLUDE
                  color.rgb = lerp(color.rgb, colorM.rgb, s);
                  colorBlurred.rgb += kernel[i].rgb * color.rgb;
                 }
-            return colorBlurred * 0.5;
+            return colorBlurred;
             }
 ENDCG
     SubShader {
@@ -67,17 +67,13 @@ ENDCG
                 float SceneDepth_Sorce = max(0, LinearEyeDepth(SAMPLE_DEPTH_TEXTURE(_CameraDepthTexture, i.uv0)) - _ProjectionParams.g);
 				float4 colorM = tex2D(_MainTex, i.uv0);
 				float tp = tex2D(_CameraGBufferTexture0, i.uv0).a;
-				if (tp < 0.1) {
-					return colorM;
-				}
                 float3 XBlur = SSS( SceneDepth_Sorce , colorM, i.uv0 , float2(1,0) , _SSSScale * _MainTex_TexelSize.x).rgb;
-                return float4(XBlur,1);
+                return lerp(colorM, float4(XBlur,1), tp);
             }
             ENDCG
         }
 
         Pass {
-            Blend one one
             CGPROGRAM
             #pragma vertex vert
             #pragma fragment frag
@@ -85,9 +81,8 @@ ENDCG
                 float SceneDepth_Sorce = max(0, LinearEyeDepth(SAMPLE_DEPTH_TEXTURE(_CameraDepthTexture, i.uv0)) - _ProjectionParams.g);
 				float4 colorM = tex2D(_MainTex, i.uv0);
 				float tp = tex2D(_CameraGBufferTexture0, i.uv0).a;
-                clip(tp - 0.1);
                 float3 YBlur = SSS( SceneDepth_Sorce , colorM, i.uv0 , float2(0,1) , _SSSScale * _MainTex_TexelSize.y).rgb;
-                return float4(YBlur,1);
+                return lerp(colorM, float4(YBlur,1), tp);
             }
             ENDCG
         }
