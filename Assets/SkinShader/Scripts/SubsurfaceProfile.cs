@@ -4,7 +4,7 @@ using UnityEngine;
 using UnityEngine.Rendering;
 [RequireComponent(typeof(Camera))]
 public class SubsurfaceProfile : MonoBehaviour {
-    [Range(-20f, 20f)]
+    [Range(0, 100f)]
 	public float SSSScaler = 1;
     public Color SSSColor;
     public Color SSSFalloff;
