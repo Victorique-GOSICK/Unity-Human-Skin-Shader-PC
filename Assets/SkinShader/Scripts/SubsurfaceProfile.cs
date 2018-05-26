@@ -19,7 +19,7 @@ public class SubsurfaceProfile : MonoBehaviour {
         buffer = new CommandBuffer();
         Vector3 SSSC = new Vector3(SSSColor.r, SSSColor.g, SSSColor.b);
         Vector3 SSSFC = new Vector3(SSSFalloff.r, SSSFalloff.g, SSSFalloff.b);
-        SeparableSSS.calculateKernel(KernelArray, 16, SSSC, SSSFC);
+        SeparableSSS.calculateKernel(KernelArray, 20, SSSC, SSSFC);
     }
 
     private void OnEnable()
