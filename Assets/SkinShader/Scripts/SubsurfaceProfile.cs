@@ -4,7 +4,7 @@ using UnityEngine;
 using UnityEngine.Rendering;
 [RequireComponent(typeof(Camera))]
 public class SubsurfaceProfile : MonoBehaviour {
-    [Range(0, 100f)]
+    [Range(0, 25f)]
 	public float SSSScaler = 1;
     public Color SSSColor;
     public Color SSSFalloff;
@@ -17,6 +17,9 @@ public class SubsurfaceProfile : MonoBehaviour {
     {
         cam = GetComponent<Camera>();
         buffer = new CommandBuffer();
+        Vector3 SSSC = new Vector3(SSSColor.r, SSSColor.g, SSSColor.b);
+        Vector3 SSSFC = new Vector3(SSSFalloff.r, SSSFalloff.g, SSSFalloff.b);
+        SeparableSSS.calculateKernel(KernelArray, 16, SSSC, SSSFC);
     }
 
     private void OnEnable()
@@ -37,9 +40,6 @@ public class SubsurfaceProfile : MonoBehaviour {
 
     private void OnPreRender()
     {
-        Vector3 SSSC = new Vector3(SSSColor.r, SSSColor.g, SSSColor.b);
-        Vector3 SSSFC = new Vector3(SSSFalloff.r, SSSFalloff.g, SSSFalloff.b);
-        SeparableSSS.calculateKernel(KernelArray, 16, SSSC, SSSFC);
         effect.SetFloat(_SSSScale, SSSScaler);
         effect.SetVectorArray(kernel, KernelArray);
         buffer.Clear();
